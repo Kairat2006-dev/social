@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\StoreRequest;
+use App\Http\Resources\PostResource;
+use App\Models\Post;
+use App\Models\PostImage;
+use App\Service\PostService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -19,15 +25,27 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Post/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validationData();
+
+            $post = PostService::store($data);
+
+            return PostResource::make($post);
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return response()->json(['message' => $exception->getMessage()], 500);
+        }
+
+
     }
 
     /**
