@@ -33,6 +33,7 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request)
     {
+
         try {
             DB::beginTransaction();
             $data = $request->validationData();

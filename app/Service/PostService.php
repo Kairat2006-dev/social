@@ -13,6 +13,7 @@ class PostService
         $post = Post::create($data);
         $postId = $post->id;
         PostImageService::updatePostId($imageId, $postId);
+        Post::clearStorage();
         return $post;
     }
 }

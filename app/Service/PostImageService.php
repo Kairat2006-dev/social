@@ -11,6 +11,7 @@ class PostImageService
         if(isset($imageId)) {
            $post = PostImage::find($imageId);
             $post->update(['post_id' => $postId,'status' => true]);
+
         }
     }
 }
