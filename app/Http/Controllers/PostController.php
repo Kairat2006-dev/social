@@ -17,7 +17,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = PostResource::collection(Post::all())->resolve();
+        return inertia("Post/Index", compact('posts'));
     }
 
     /**
@@ -37,9 +38,7 @@ class PostController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->validationData();
-
             $post = PostService::store($data);
-
             return PostResource::make($post);
         }catch (\Exception $exception){
             DB::rollBack();
@@ -52,9 +51,10 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        //
+        $post = PostResource::make($post)->resolve();
+        return inertia("Post/Show", compact('post'));
     }
 
     /**
