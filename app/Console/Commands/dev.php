@@ -26,6 +26,7 @@ class dev extends Command
      */
     public function handle()
     {
-
+        $post =Post::find(12);
+        dd($post->users);
     }
 }

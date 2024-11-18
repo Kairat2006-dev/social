@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class Post extends Model
 {
     use HasFactory;
+
     protected $guarded = false;
     protected $table = 'posts';
     protected $with = ['image'];
@@ -17,6 +18,10 @@ class Post extends Model
     {
         return $this->hasOne(PostImage::class, 'post_id', 'id')
             ->whereNotNull('post_id');
+    }
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public static function clearStorage()
