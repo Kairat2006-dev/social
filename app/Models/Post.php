@@ -26,8 +26,8 @@ class Post extends Model
 
     public static function clearStorage()
     {
-        $images = PostImage::where('user_id',auth()->id())
-        ->whereNull('post_id')->get();
+        $images = PostImage::where('post_id',null)
+        ->get();
         foreach ($images as $image) {
             Storage::disk('public')->delete($image->patch);
             $image->delete();

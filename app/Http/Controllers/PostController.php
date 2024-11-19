@@ -39,6 +39,7 @@ class PostController extends Controller
             DB::beginTransaction();
             $data = $request->validationData();
             $post = PostService::store($data);
+            DB::commit();
             return PostResource::make($post);
         }catch (\Exception $exception){
             DB::rollBack();

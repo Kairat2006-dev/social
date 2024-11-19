@@ -49,7 +49,7 @@ export default {
     </div>
     <div v-if="image">
       <img :src="image.url">
-      <a href="#" @click.prevent="image =null">Cancel</a>
+      <a href="#" @click.prevent="image = null">Cancel</a>
     </div>
     <div class="flex mb-2 justify-between">
       <div class="relative">

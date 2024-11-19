@@ -11,6 +11,7 @@ class PostService
         unset($data['image_id']);
         $post = Post::create($data);
         $postId = $post->id;
+
         PostImageService::updatePostId($imageId, $postId);
         Post::clearStorage();
         return $post;
