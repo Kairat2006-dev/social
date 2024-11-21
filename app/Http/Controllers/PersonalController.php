@@ -30,4 +30,5 @@ class PersonalController extends Controller
         $data['following'] = count($res['attached']) > 0;
         return $data;
     }
+
 }

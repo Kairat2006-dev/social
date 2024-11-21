@@ -21,7 +21,9 @@ class PostResource extends JsonResource
             'image_url' => $this->image->url ?? '',
             'user' => $this->user_id,
             'user_name' => $this->users->name ?? '',
-            'users'=>$this->users ?? ''
+            'users'=>$this->users ?? '',
+            'liked' => $this->liked ?? false,
+            'liked_col'=> count($this->likedPost) ?? 0,
         ];
     }
 }

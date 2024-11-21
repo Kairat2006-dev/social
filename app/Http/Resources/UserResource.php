@@ -18,7 +18,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'following'=>$this->following ?? false
+            'following'=>$this->following ?? false,
+            'liked_col'=>count($this->postLike) ?? 0,
         ];
     }
 }

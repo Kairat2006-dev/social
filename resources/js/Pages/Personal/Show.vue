@@ -21,9 +21,9 @@ export default {
         toogleFollowing(user){
             axios.get(`/users/${user.id}/toogleFollowing`)
                 .then(res=>{
+                    this.userData
                     this.userData.following = res.data.
                         following
-
                 })
         }
     }
@@ -38,10 +38,13 @@ export default {
                 @click.prevent="toogleFollowing(userData)"
                 class="px-4 py-2 rounded transition-colors duration-200 hover:bg-red-600 hover:text-white"
             >
-                {{ userData.following ? 'Отписаться' : 'Подписаться' }}
+                {{ userData.following ? 'Подписаться' : '' }}
             </button>
         </div>
-
+        <div>
+            Всего лайков
+            {{userData.liked_col}}
+        </div>
         <div class="mb-4">
             <Link :href="route('posts.index')" class="text-blue-500 hover:underline">
                 На главную
@@ -60,6 +63,7 @@ export default {
                     <div v-if="post.image_url" class="mb-2">
                         <img :src="post.image_url" alt="preview" class="w-full h-auto rounded-md shadow-sm">
                     </div>
+
                     <div>
                         <span class="font-medium text-gray-600">Content:</span>
                         <p class="text-gray-700">{{ post.content }}</p>

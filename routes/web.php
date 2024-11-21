@@ -28,5 +28,6 @@ Route::resource('posts', PostController::class);
 Route::post('/post_image',[\App\Http\Controllers\PostImagesController::class,'store']);
 Route::get('/users/{user}',[\App\Http\Controllers\PersonalController::class,'show'])->name('personal.show');
 Route::get('/users/{user}/toogleFollowing',[\App\Http\Controllers\PersonalController::class,'toogleFollowing'])->name('personal.toogleFollowing');
+Route::get('/posts/{post}/toggle_liked',[\App\Http\Controllers\PostController::class,'toggleLiked'])->name('personal.follow');
 
 require __DIR__.'/auth.php';

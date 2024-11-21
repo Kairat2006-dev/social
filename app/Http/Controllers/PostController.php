@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
+use App\Models\LikedPost;
 use App\Models\Post;
 use App\Models\PostImage;
+use App\Models\SubscriberFollowing;
 use App\Service\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +20,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = PostResource::collection(Post::all())->resolve();
+        $posts = PostResource::collection(Post::all());
+        $likedId = LikedPost::where('user_id', auth()->id())
+            ->get('post_id')->pluck('post_id')->toArray();
+        foreach ($posts as $post) {
+            if (in_array($post['id'], $likedId)) {
+                $post['liked'] = true;
+            }
+        }
         return inertia("Post/Index", compact('posts'));
     }
 
@@ -54,8 +64,14 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post = PostResource::make($post)->resolve();
-        return inertia("Post/Show", compact('post'));
+        $post = PostResource::make($post);
+        $user = UserResource::make($post['users'])->resolve();
+        $following = SubscriberFollowing::where('subscriber_id',auth()->id())
+        ->get('following_id')->pluck('following_id')->toArray();
+        if (in_array($user['id'], $following)) {
+            $user['following'] = true;
+        }
+        return inertia("Post/Show", compact('post', 'user'));
     }
 
     /**
@@ -80,5 +96,10 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function toggleLiked(Post $post){
+        $res = auth()->user()->postLike()->toggle($post);
+        $data['liked'] = count($res['attached']) > 0;
+        return $data;
     }
 }

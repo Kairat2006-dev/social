@@ -33,4 +33,7 @@ class Post extends Model
             $image->delete();
         }
     }
+    public function likedPost(){
+        return $this->belongsToMany(User::class, 'liked_posts', 'post_id', 'user_id');
+    }
 }
