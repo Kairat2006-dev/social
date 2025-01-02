@@ -44,7 +44,11 @@ export default {
                 </div>
             </Link>
             <div class="px-4 py-2 bg-gray-50 flex items-center justify-between">
-                <a :href="route('personal.show', post.user)" class="text-blue-500 hover:underline">{{ post.user_name }}</a>
+                <div>
+                    <a :href="route('personal.show', post.user)" class="text-blue-500 hover:underline">{{ post.user_name }}</a>
+                </div>
+                <a :href="route('posts.edit', post.id)" class="text-blue-500 hover:underline">Изменить</a>
+
                 <div class="flex items-center space-x-2">
                     <span class="text-gray-600">{{ post.liked_col }}</span>
                     <button @click.prevent="toggleLiked(post)" class="focus:outline-none">

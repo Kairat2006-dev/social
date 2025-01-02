@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StoreRequest;
+use App\Http\Requests\Post\UpdateReqest;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\PostUpdateResource;
 use App\Http\Resources\UserResource;
 use App\Models\LikedPost;
 use App\Models\Post;
@@ -51,7 +53,7 @@ class PostController extends Controller
             $post = PostService::store($data);
             DB::commit();
             return PostResource::make($post);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             return response()->json(['message' => $exception->getMessage()], 500);
         }
@@ -66,8 +68,8 @@ class PostController extends Controller
     {
         $post = PostResource::make($post);
         $user = UserResource::make($post['users'])->resolve();
-        $following = SubscriberFollowing::where('subscriber_id',auth()->id())
-        ->get('following_id')->pluck('following_id')->toArray();
+        $following = SubscriberFollowing::where('subscriber_id', auth()->id())
+            ->get('following_id')->pluck('following_id')->toArray();
         if (in_array($user['id'], $following)) {
             $user['following'] = true;
         }
@@ -77,17 +79,28 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        $posts = PostUpdateResource::make($post);
+        return inertia("Post/Edit", compact('posts'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateReqest $request, Post $post)
     {
-        //
+        $data = $request->validationData();
+        if (isset($data['image_url']) || isset($data['image_id'])) {
+            $image = PostImage::find($data['image_id']);
+            $image->update(['image_url' => $data['image_url']]);
+            unset($data['image_url']);
+            unset($data['image_id']);
+            $post->update($data);
+        }
+        unset($data['image_url']);
+        unset($data['image_id']);
+        $post->update($data);
     }
 
     /**
@@ -97,7 +110,9 @@ class PostController extends Controller
     {
         //
     }
-    public function toggleLiked(Post $post){
+
+    public function toggleLiked(Post $post)
+    {
         $res = auth()->user()->postLike()->toggle($post);
         $data['liked'] = count($res['attached']) > 0;
         return $data;
